@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1526019893/androidassignment.iml" filepath="$PROJECT_DIR$/.idea/modules/1526019893/androidassignment.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/androidassignment.app.iml" filepath="$PROJECT_DIR$/.idea/modules/androidassignment.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1115086704/androidassignment.cashregister.iml" filepath="$PROJECT_DIR$/.idea/modules/1115086704/androidassignment.cashregister.iml" />
+    </modules>
+  </component>
+</project>
