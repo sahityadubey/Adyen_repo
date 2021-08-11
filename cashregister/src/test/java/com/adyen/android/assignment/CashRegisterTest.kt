@@ -2,6 +2,7 @@ package com.adyen.android.assignment
 
 import com.adyen.android.assignment.money.Bill
 import com.adyen.android.assignment.money.Change
+import com.adyen.android.assignment.money.Coin
 import org.junit.Assert.*
 import org.junit.Test
 
@@ -53,5 +54,39 @@ class CashRegisterTest {
         val result = CashRegister(Change.max()).performTransaction(1200_00, shoppersMoney)
 
         assertEquals(300_00, result.total)
+    }
+
+    @Test
+    fun testLessCashTransaction() {
+        val change = Change()
+            .add(Bill.ONE_HUNDRED_EURO, 1)
+            .add(Bill.FIVE_HUNDRED_EURO, 1)
+
+        val shoppersMoney = Change().add(Bill.FIVE_HUNDRED_EURO, 1)
+        val result = CashRegister(change).performTransaction(400_00, shoppersMoney)
+        assertEquals(1, result.getCount(Bill.ONE_HUNDRED_EURO))
+
+        val anotherShopper = Change().add(Bill.TWO_HUNDRED_EURO, 1)
+        val exception = assertThrows(CashRegister.TransactionException::class.java) {
+            CashRegister(change).performTransaction(100_00, anotherShopper)
+        }
+        assertEquals("Insufficient Change!", exception.message)
+    }
+
+    @Test
+    fun testTransactionInCents() {
+        val shoppersMoney = Change().add(Bill.FIVE_HUNDRED_EURO, 1)
+        val result = CashRegister(Change.max()).performTransaction(399_99, shoppersMoney)
+
+        assertEquals(1, result.getCount(Bill.ONE_HUNDRED_EURO))
+        assertEquals(1, result.getCount(Coin.ONE_CENT))
+    }
+
+    @Test
+    fun testTransactionInOneCents() {
+        val shoppersMoney = Change().add(Bill.FIVE_HUNDRED_EURO, 1)
+        val result = CashRegister(Change.max()).performTransaction(499_99, shoppersMoney)
+
+        assertEquals(1, result.getCount(Coin.ONE_CENT))
     }
 }

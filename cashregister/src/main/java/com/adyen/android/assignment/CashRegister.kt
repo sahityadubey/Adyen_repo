@@ -3,6 +3,7 @@ package com.adyen.android.assignment
 import com.adyen.android.assignment.money.Bill
 import com.adyen.android.assignment.money.Change
 import com.adyen.android.assignment.money.Coin
+import com.adyen.android.assignment.money.MonetaryElement
 
 /**
  * The CashRegister class holds the logic for performing transactions.
@@ -34,92 +35,47 @@ class CashRegister(private val change: Change) {
         return calculateChange(amountPaid.total - price)
     }
 
+    /**
+     * The calculateChange method calculate the change which will be return to the customer.
+     *
+     * @param cashDiff The Difference between the amount paid by the customer and total amount to be paid
+     *
+     * @return Change, the customer will receive
+     *
+     * @throws TransactionException If exact change is not available
+     */
     private fun calculateChange(cashDiff: Long): Change {
         var cashBack = cashDiff
         val resultChange = Change()
-        while(cashBack > 1) {
+        var moneyType: MonetaryElement
+        loop@ while(cashBack > 0) {
             when {
                 //Euro
-                cashBack > Bill.FIVE_HUNDRED_EURO.minorValue && change.getCount(Bill.FIVE_HUNDRED_EURO) > 0 -> {
-                    resultChange.add(Bill.FIVE_HUNDRED_EURO, 1)
-                    change.remove(Bill.FIVE_HUNDRED_EURO, 1)
-                    cashBack -= Bill.FIVE_HUNDRED_EURO.minorValue
-                }
-                cashBack > Bill.TWO_HUNDRED_EURO.minorValue && change.getCount(Bill.TWO_HUNDRED_EURO) > 0 -> {
-                    resultChange.add(Bill.TWO_HUNDRED_EURO, 1)
-                    change.remove(Bill.TWO_HUNDRED_EURO, 1)
-                    cashBack -= Bill.TWO_HUNDRED_EURO.minorValue
-                }
-                cashBack > Bill.ONE_HUNDRED_EURO.minorValue && change.getCount(Bill.ONE_HUNDRED_EURO) > 0 -> {
-                    resultChange.add(Bill.ONE_HUNDRED_EURO, 1)
-                    change.remove(Bill.ONE_HUNDRED_EURO, 1)
-                    cashBack -= Bill.ONE_HUNDRED_EURO.minorValue
-                }
-                cashBack > Bill.FIFTY_EURO.minorValue && change.getCount(Bill.FIFTY_EURO) > 0 -> {
-                    resultChange.add(Bill.FIFTY_EURO, 1)
-                    change.remove(Bill.FIFTY_EURO, 1)
-                    cashBack -= Bill.FIFTY_EURO.minorValue
-                }
-                cashBack > Bill.TWENTY_EURO.minorValue && change.getCount(Bill.TWENTY_EURO) > 0 -> {
-                    resultChange.add(Bill.TWENTY_EURO, 1)
-                    change.remove(Bill.TWENTY_EURO, 1)
-                    cashBack -= Bill.TWENTY_EURO.minorValue
-                }
-                cashBack > Bill.TEN_EURO.minorValue && change.getCount(Bill.TEN_EURO) > 0 -> {
-                    resultChange.add(Bill.TEN_EURO, 1)
-                    change.remove(Bill.TEN_EURO, 1)
-                    cashBack -= Bill.TEN_EURO.minorValue
-                }
-                cashBack > Bill.FIVE_EURO.minorValue && change.getCount(Bill.FIVE_EURO) > 0 -> {
-                    resultChange.add(Bill.FIVE_EURO, 1)
-                    change.remove(Bill.FIVE_EURO, 1)
-                    cashBack -= Bill.FIVE_EURO.minorValue
-                }
-                cashBack > Coin.TWO_EURO.minorValue && change.getCount(Coin.TWO_EURO) > 0 -> {
-                    resultChange.add(Coin.TWO_EURO, 1)
-                    change.remove(Coin.TWO_EURO, 1)
-                    cashBack -= Coin.TWO_EURO.minorValue
-                }
-                cashBack > Coin.ONE_EURO.minorValue && change.getCount(Coin.ONE_EURO) > 0 -> {
-                    resultChange.add(Coin.ONE_EURO, 1)
-                    change.remove(Coin.ONE_EURO, 1)
-                    cashBack -= Coin.ONE_EURO.minorValue
-                }
+                cashBack >= Bill.FIVE_HUNDRED_EURO.minorValue && change.getCount(Bill.FIVE_HUNDRED_EURO) > 0 -> moneyType = Bill.FIVE_HUNDRED_EURO
+                cashBack >= Bill.TWO_HUNDRED_EURO.minorValue && change.getCount(Bill.TWO_HUNDRED_EURO) > 0 -> moneyType = Bill.TWO_HUNDRED_EURO
+                cashBack >= Bill.ONE_HUNDRED_EURO.minorValue && change.getCount(Bill.ONE_HUNDRED_EURO) > 0 -> moneyType = Bill.ONE_HUNDRED_EURO
+                cashBack >= Bill.FIFTY_EURO.minorValue && change.getCount(Bill.FIFTY_EURO) > 0 -> moneyType = Bill.FIFTY_EURO
+                cashBack >= Bill.TWENTY_EURO.minorValue && change.getCount(Bill.TWENTY_EURO) > 0 -> moneyType = Bill.TWENTY_EURO
+                cashBack >= Bill.TEN_EURO.minorValue && change.getCount(Bill.TEN_EURO) > 0 -> moneyType = Bill.TEN_EURO
+                cashBack >= Bill.FIVE_EURO.minorValue && change.getCount(Bill.FIVE_EURO) > 0 -> moneyType = Bill.FIVE_EURO
+                cashBack >= Coin.TWO_EURO.minorValue && change.getCount(Coin.TWO_EURO) > 0 -> moneyType = Coin.TWO_EURO
+                cashBack >= Coin.ONE_EURO.minorValue && change.getCount(Coin.ONE_EURO) > 0 -> moneyType = Coin.ONE_EURO
 
                 //Cents
-                cashBack > .50 && change.getCount(Coin.FIFTY_CENT) > 0 -> {
-                    resultChange.add(Coin.FIFTY_CENT, 1)
-                    change.remove(Coin.FIFTY_CENT, 1)
-                    cashBack -= Coin.FIFTY_CENT.minorValue
-                }
-                cashBack > .20 && change.getCount(Coin.TWENTY_CENT) > 0 -> {
-                    resultChange.add(Coin.TWENTY_CENT, 1)
-                    change.remove(Coin.TWENTY_CENT, 1)
-                    cashBack -= Coin.TWENTY_CENT.minorValue
-                }
-                cashBack > .10 && change.getCount(Coin.TEN_CENT) > 0 -> {
-                    resultChange.add(Coin.TEN_CENT, 1)
-                    change.remove(Coin.TEN_CENT, 1)
-                    cashBack -= Coin.TEN_CENT.minorValue
-                }
-                cashBack > .05 && change.getCount(Coin.FIVE_CENT) > 0 -> {
-                    resultChange.add(Coin.FIVE_CENT, 1)
-                    change.remove(Coin.FIVE_CENT, 1)
-                    cashBack -= Coin.FIVE_CENT.minorValue
-                }
-                cashBack > .02 && change.getCount(Coin.TWO_CENT) > 0 -> {
-                    resultChange.add(Coin.TWO_CENT, 1)
-                    change.remove(Coin.TWO_CENT, 1)
-                    cashBack -= Coin.TWO_CENT.minorValue
-                }
-                cashBack > .01 && change.getCount(Coin.ONE_CENT) > 0 -> {
-                    resultChange.add(Coin.ONE_CENT, 1)
-                    change.remove(Coin.ONE_CENT, 1)
-                    cashBack -= Coin.ONE_CENT.minorValue
-                }
+                cashBack >= Coin.FIFTY_CENT.minorValue && change.getCount(Coin.FIFTY_CENT) > 0 -> moneyType = Coin.FIFTY_CENT
+                cashBack >= Coin.TWENTY_CENT.minorValue && change.getCount(Coin.TWENTY_CENT) > 0 -> moneyType = Coin.TWENTY_CENT
+                cashBack >= Coin.TEN_CENT.minorValue && change.getCount(Coin.TEN_CENT) > 0 -> moneyType = Coin.TEN_CENT
+                cashBack >= Coin.FIVE_CENT.minorValue && change.getCount(Coin.FIVE_CENT) > 0 -> moneyType = Coin.FIVE_CENT
+                cashBack >= Coin.TWO_CENT.minorValue && change.getCount(Coin.TWO_CENT) > 0 -> moneyType = Coin.TWO_CENT
+                cashBack >= Coin.ONE_CENT.minorValue && change.getCount(Coin.ONE_CENT) > 0 -> moneyType = Coin.ONE_CENT
+
                 //When right combination of change are not present
                 else -> throw TransactionException("Insufficient Change!")
             }
+
+            resultChange.add(moneyType, 1)
+            change.remove(moneyType, 1)
+            cashBack -= moneyType.minorValue
         }
 
         return resultChange
