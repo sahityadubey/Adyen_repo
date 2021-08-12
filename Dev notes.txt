@@ -1,0 +1,15 @@
+Project1-
+1. Code uploaded in github repo
+2. Resolved build issue
+3. Generated Foursquare’s client id and secret
+	a. Added in local gradle file
+4. Added user location permission
+5. Capture location with Fused location(GMS)
+6. Added search view for filter
+7. Follow MVVM architecture
+
+Improvement can be done in future
+1. Live data/ Flow
+2. View bindings
+3. Hilt for dependency injection
+
