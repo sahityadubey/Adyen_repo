@@ -76,10 +76,10 @@ class CashRegisterTest {
     @Test
     fun testTransactionInCents() {
         val shoppersMoney = Change().add(Bill.FIVE_HUNDRED_EURO, 1)
-        val result = CashRegister(Change.max()).performTransaction(399_99, shoppersMoney)
+        val result = CashRegister(Change.max()).performTransaction(399_98, shoppersMoney)
 
         assertEquals(1, result.getCount(Bill.ONE_HUNDRED_EURO))
-        assertEquals(1, result.getCount(Coin.ONE_CENT))
+        assertEquals(1, result.getCount(Coin.TWO_CENT))
     }
 
     @Test

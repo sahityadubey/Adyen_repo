@@ -38,8 +38,4 @@ class ListOfVenuesAdapter(context: Context) : RecyclerView.Adapter<ListOfVenuesA
     }
 
     override fun getItemCount() = recommendedItems.size
-
-    init {
-        mContext = context
-    }
 }

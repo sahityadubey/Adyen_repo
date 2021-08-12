@@ -119,14 +119,14 @@ class MainActivity : BaseActivity() {
                         if (task.isSuccessful && task.result != null) {
                             locationViewModel.getAllVenueNearBy(task.result)
                         } else {
-                            Log.w("TAG", "getLastLocation:exception", task.exception)
+                            Log.d(this::getLocalClassName.toString(), "getLastLocation:exception", task.exception)
                         }
                     }
 
             } else {
                 "Turn on location".showToast(this)
                 val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                this.startActivity(intent)
+                startActivity(intent)
             }
         } else{
             requestPermissions()
